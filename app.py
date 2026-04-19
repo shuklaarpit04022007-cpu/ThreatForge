@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import re
-import os
 
 app = Flask(__name__)
 CORS(app)
@@ -9,6 +8,7 @@ CORS(app)
 @app.route("/")
 def home():
     return "Backend is running 🚀"
+
 
 def analyze_message(message):
     message_lower = message.lower()
@@ -51,6 +51,7 @@ def analyze_message(message):
         "reason": ", ".join(reasons) if reasons else "No strong phishing signals"
     }
 
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
@@ -65,6 +66,6 @@ def analyze():
 
     return jsonify(analyze_message(message))
 
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
