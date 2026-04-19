@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ThreatForge</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    body {
+        background: radial-gradient(circle at top, #0b1220, #05070f);
+        color: #e6e6e6;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 900px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .header p {
+        font-size: 13px;
+        color: #aaa;
+        margin-top: 5px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 180px;
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(0,0,0,0.3);
+        color: white;
+        font-size: 14px;
+        outline: none;
+        resize: none;
+        margin-top: 15px;
+    }
+
+    textarea:focus {
+        border-color: #4f9cff;
+        box-shadow: 0 0 10px rgba(79,156,255,0.3);
+    }
+
+    button {
+        width: 100%;
+        margin-top: 15px;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f9cff, #6a5cff);
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(79,156,255,0.3);
+    }
+
+    .result {
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: none;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .safe {
+        background: rgba(0, 200, 100, 0.15);
+        color: #00e676;
+    }
+
+    .phishing {
+        background: rgba(255, 50, 50, 0.15);
+        color: #ff5252;
+    }
+
+    .score-bar {
+        width: 100%;
+        height: 10px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+
+    .score-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #00e676, #ff5252);
+        transition: 0.5s;
+    }
+
+    .reason {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #bbb;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🛡️ THREATFORGE </h1>
+        <p>AI-style security analysis (Offline Engine)</p>
+    </div>
+
+    <textarea id="message" placeholder="Paste email, SMS, or message here..."></textarea>
+
+    <button onclick="analyze()">Analyze Message</button>
+
+    <div class="result" id="resultBox">
+        <div id="badge"></div>
+        <div style="margin-top:10px;font-size:14px;">
+            Risk Score: <span id="scoreText"></span>/100
+        </div>
+
+        <div class="score-bar">
+            <div class="score-fill" id="scoreFill"></div>
+        </div>
+
+        <div class="reason" id="reasonText"></div>
+    </div>
+
+</div>
+
+<script>
+async function analyze() {
+    let message = document.getElementById("message").value;
+
+    if (!message) {
+        alert("Please enter a message");
+        return;
+    }
+
+    let res = await fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message })
+    });
+
+    let data = await res.json();
+
+    let box = document.getElementById("resultBox");
+    let badge = document.getElementById("badge");
+    let scoreText = document.getElementById("scoreText");
+    let scoreFill = document.getElementById("scoreFill");
+    let reasonText = document.getElementById("reasonText");
+
+    box.style.display = "block";
+
+    let isPhishing = data.verdict === "Phishing";
+
+    badge.innerHTML = `<span class="badge ${isPhishing ? 'phishing' : 'safe'}">${data.verdict}</span>`;
+    scoreText.innerText = data.score;
+
+    scoreFill.style.width = data.score + "%";
+
+    reasonText.innerText = "Reason: " + data.reason;
+}
+</script>
+
+</body>
+</html>
