@@ -1,227 +1,448 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ThreatForge</title>
-
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ThreatForge — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #05070f;
+      --bg-1: #0b1220;
+      --panel: rgba(255, 255, 255, 0.04);
+      --panel-strong: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #e8ecf3;
+      --muted: #8a93a6;
+      --accent: #4f9cff;
+      --accent-2: #6a5cff;
+      --safe: #00e676;
+      --danger: #ff5577;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
 
     body {
-        background: radial-gradient(circle at top, #0b1220, #05070f);
-        color: #e6e6e6;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(79,156,255,0.15), transparent 60%),
+                  radial-gradient(900px 500px at 110% 10%, rgba(106,92,255,0.18), transparent 60%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-0));
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-        width: 100%;
-        max-width: 900px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
     }
 
-    .header {
-        text-align: center;
-        margin-bottom: 25px;
+    header.top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
-    .header h1 {
-        font-size: 26px;
-        font-weight: 700;
-        letter-spacing: 1px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand .logo {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid; place-items: center;
+      box-shadow: 0 10px 30px rgba(79,156,255,0.35);
+      font-size: 18px;
+    }
+    .brand h1 {
+      font-size: 18px;
+      letter-spacing: 0.4px;
+      font-weight: 700;
+    }
+    .brand p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
-    .header p {
-        font-size: 13px;
-        color: #aaa;
-        margin-top: 5px;
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 880px) {
+      .grid { grid-template-columns: 1.05fr 1fr; }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .card h2 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
     }
 
     textarea {
-        width: 100%;
-        height: 180px;
-        padding: 15px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.1);
-        background: rgba(0,0,0,0.3);
-        color: white;
-        font-size: 14px;
-        outline: none;
-        resize: none;
-        margin-top: 15px;
+      width: 100%;
+      height: 160px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
     }
-
     textarea:focus {
-        border-color: #4f9cff;
-        box-shadow: 0 0 10px rgba(79,156,255,0.3);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(79,156,255,0.12);
     }
 
-    button {
-        width: 100%;
-        margin-top: 15px;
-        padding: 14px;
-        border: none;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #4f9cff, #6a5cff);
-        color: white;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
+    .row {
+      display: flex; gap: 10px; margin-top: 12px;
     }
 
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(79,156,255,0.3);
+    button.primary {
+      flex: 1;
+      padding: 13px 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
     }
+    button.primary:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(79,156,255,0.3); }
+    button.primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    button.ghost {
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font: inherit;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    button.ghost:hover { background: var(--panel-strong); }
 
     .result {
-        margin-top: 25px;
-        padding: 20px;
-        border-radius: 15px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      display: none;
     }
+    .result.show { display: block; }
 
     .badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.3px;
     }
+    .badge.safe { background: rgba(0, 230, 118, 0.14); color: var(--safe); }
+    .badge.phishing { background: rgba(255, 85, 119, 0.16); color: var(--danger); }
+    .badge.error { background: rgba(255, 200, 0, 0.14); color: #ffd166; }
 
-    .safe {
-        background: rgba(0, 200, 100, 0.15);
-        color: #00e676;
+    .meta {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
     }
+    .meta .score { color: var(--text); font-weight: 600; font-size: 15px; }
 
-    .phishing {
-        background: rgba(255, 50, 50, 0.15);
-        color: #ff5252;
+    .bar {
+      width: 100%; height: 8px; margin-top: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px; overflow: hidden;
     }
-
-    .score-bar {
-        width: 100%;
-        height: 10px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 20px;
-        overflow: hidden;
-        margin-top: 10px;
-    }
-
-    .score-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #00e676, #ff5252);
-        transition: 0.5s;
+    .bar > i {
+      display: block; height: 100%;
+      background: linear-gradient(90deg, var(--safe), #ffb84d, var(--danger));
+      width: 0%;
+      transition: width .5s ease;
     }
 
     .reason {
-        margin-top: 10px;
-        font-size: 13px;
-        color: #bbb;
-        line-height: 1.5;
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #c4ccd9;
     }
 
-    @media (max-width: 600px) {
-        .container {
-            padding: 20px;
-        }
-
-        .header h1 {
-            font-size: 20px;
-        }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
     }
-</style>
+    .stat {
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat .v { font-size: 20px; font-weight: 700; }
+    .stat .l { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.3px; text-transform: uppercase; }
+    .stat.safe .v { color: var(--safe); }
+    .stat.phishing .v { color: var(--danger); }
+
+    .list {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .list::-webkit-scrollbar { width: 8px; }
+    .list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 8px; }
+
+    .item {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.2);
+    }
+    .item .head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-bottom: 6px;
+    }
+    .item .when {
+      font-size: 11px; color: var(--muted);
+    }
+    .item .msg {
+      font-size: 13px;
+      color: #d6dbe6;
+      line-height: 1.45;
+      word-break: break-word;
+      white-space: pre-wrap;
+      max-height: 4.5em; overflow: hidden;
+      mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+    }
+    .item .foot {
+      display: flex; justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px; color: var(--muted);
+    }
+
+    .empty, .err {
+      padding: 22px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+    .err { color: #ffb1bd; border-color: rgba(255,85,119,0.4); }
+
+    .skeleton {
+      height: 56px; border-radius: 12px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    footer.foot {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+  </style>
 </head>
-
 <body>
+  <div class="shell">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🛡️</div>
+        <div>
+          <h1>THREATFORGE</h1>
+          <p>Phishing analyzer dashboard</p>
+        </div>
+      </div>
+      <button class="ghost" id="refreshBtn" type="button">Refresh</button>
+    </header>
 
-<div class="container">
-
-    <div class="header">
-        <h1>🛡️ THREATFORGE </h1>
-        <p>AI-style security analysis (Offline Engine)</p>
-    </div>
-
-    <textarea id="message" placeholder="Paste email, SMS, or message here..."></textarea>
-
-    <button onclick="analyze()">Analyze Message</button>
-
-    <div class="result" id="resultBox">
-        <div id="badge"></div>
-        <div style="margin-top:10px;font-size:14px;">
-            Risk Score: <span id="scoreText"></span>/100
+    <div class="grid">
+      <section class="card">
+        <h2>Analyze a message</h2>
+        <textarea id="message" placeholder="Paste an email, SMS, or message here…"></textarea>
+        <div class="row">
+          <button class="primary" id="analyzeBtn" type="button">Analyze message</button>
         </div>
 
-        <div class="score-bar">
-            <div class="score-fill" id="scoreFill"></div>
+        <div class="result" id="resultBox" aria-live="polite">
+          <div id="badge"></div>
+          <div class="meta">
+            <span>Risk score</span>
+            <span class="score"><span id="scoreText">0</span>/100</span>
+          </div>
+          <div class="bar"><i id="scoreFill"></i></div>
+          <div class="reason" id="reasonText"></div>
         </div>
+      </section>
 
-        <div class="reason" id="reasonText"></div>
+      <section class="card">
+        <h2>Recent submissions</h2>
+        <div class="stats">
+          <div class="stat"><div class="v" id="statTotal">–</div><div class="l">Total</div></div>
+          <div class="stat phishing"><div class="v" id="statPhish">–</div><div class="l">Phishing</div></div>
+          <div class="stat safe"><div class="v" id="statSafe">–</div><div class="l">Safe</div></div>
+        </div>
+        <div class="list" id="list">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      </section>
     </div>
 
-</div>
+    <footer class="foot">Offline rule-based analysis · Submissions are stored for review.</footer>
+  </div>
 
-<script>
- async function analyzeMessage() {
-    let message = document.getElementById("message").value;
+  <script>
+    const $ = (id) => document.getElementById(id);
 
-    if (!message) {
-        alert("Please enter a message");
+    async function analyze() {
+      const msg = $('message').value.trim();
+      if (!msg) {
+        alert('Please enter a message to analyze.');
         return;
-    }
+      }
+      const btn = $('analyzeBtn');
+      btn.disabled = true;
+      btn.textContent = 'Analyzing…';
 
-    try {
-        let res = await fetch("https://threatforge-production.up.railway.app/analyze", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ message })
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg }),
         });
-
-        let data = await res.json();
-
-        let box = document.getElementById("resultBox");
-        let badge = document.getElementById("badge");
-        let scoreText = document.getElementById("scoreText");
-        let scoreFill = document.getElementById("scoreFill");
-        let reasonText = document.getElementById("reasonText");
-
-        box.style.display = "block";
-
-        let isPhishing = data.verdict === "Phishing";
-
-        badge.innerHTML = `<span class="badge ${isPhishing ? 'phishing' : 'safe'}">${data.verdict}</span>`;
-        scoreText.innerText = data.score;
-        scoreFill.style.width = data.score + "%";
-        reasonText.innerText = "Reason: " + data.reason;
-
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong. Check console.");
+        const data = await res.json();
+        renderResult(data);
+        loadMessages();
+      } catch (err) {
+        console.error(err);
+        renderResult({ verdict: 'Error', score: 0, reason: 'Network error — please try again.' });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyze message';
+      }
     }
-}
-</script>
 
+    function renderResult(data) {
+      const box = $('resultBox');
+      const badge = $('badge');
+      const scoreText = $('scoreText');
+      const scoreFill = $('scoreFill');
+      const reasonText = $('reasonText');
+
+      box.classList.add('show');
+
+      const verdict = data.verdict || 'Error';
+      const cls = verdict === 'Phishing' ? 'phishing' : verdict === 'Safe' ? 'safe' : 'error';
+      badge.innerHTML = `<span class="badge ${cls}">${verdict}</span>`;
+      scoreText.textContent = data.score ?? 0;
+      scoreFill.style.width = (data.score ?? 0) + '%';
+      reasonText.textContent = data.reason || '';
+    }
+
+    function timeAgo(iso) {
+      const then = new Date(iso).getTime();
+      if (!then) return '';
+      const diff = Math.max(0, Date.now() - then) / 1000;
+      if (diff < 60) return Math.floor(diff) + 's ago';
+      if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      return Math.floor(diff / 86400) + 'd ago';
+    }
+
+    async function loadMessages() {
+      const list = $('list');
+      try {
+        const res = await fetch('/api/messages?limit=25');
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+
+        $('statTotal').textContent = data.stats.total ?? 0;
+        $('statPhish').textContent = data.stats.phishing ?? 0;
+        $('statSafe').textContent = data.stats.safe ?? 0;
+
+        if (!data.items?.length) {
+          list.innerHTML = '<div class="empty">No submissions yet. Analyze a message to populate the dashboard.</div>';
+          return;
+        }
+
+        list.innerHTML = data.items.map((item) => {
+          const cls = item.verdict === 'Phishing' ? 'phishing' : 'safe';
+          const where = [item.city, item.country].filter(Boolean).join(', ');
+          return `
+            <div class="item">
+              <div class="head">
+                <span class="badge ${cls}">${item.verdict} · ${item.score}</span>
+                <span class="when">${timeAgo(item.createdAt)}</span>
+              </div>
+              <div class="msg">${escapeHtml(item.message)}</div>
+              <div class="foot">
+                <span>${escapeHtml(item.reason || '')}</span>
+                <span>${escapeHtml(where)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = '<div class="err">Could not load submissions. Try refreshing.</div>';
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.getElementById('analyzeBtn').addEventListener('click', analyze);
+    document.getElementById('refreshBtn').addEventListener('click', loadMessages);
+    document.getElementById('message').addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') analyze();
+    });
+
+    loadMessages();
+  </script>
 </body>
 </html>
