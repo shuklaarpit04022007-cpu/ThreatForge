@@ -1,0 +1,146 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+/* ===== BACKGROUND ===== */
+body{
+    min-height:100vh;
+    background: radial-gradient(circle at top,#0f2233,#050b14);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+/* ===== LOGIN CONTAINER ===== */
+.container{
+    perspective:1000px;
+}
+
+/* ===== 3D LOGIN CARD ===== */
+.card{
+    width:360px;
+    padding:40px;
+    text-align:center;
+
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.6),
+        inset 0 0 20px rgba(255,255,255,0.05);
+
+    transform: rotateX(10deg) rotateY(-10deg);
+    transition:0.4s ease;
+}
+
+.card:hover{
+    transform: rotateX(0deg) rotateY(0deg) scale(1.05);
+}
+
+.card h2{
+    color:#00d4ff;
+    margin-bottom:10px;
+}
+
+.card p{
+    color:#cfd8dc;
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+
+    border:none;
+    border-radius:10px;
+    outline:none;
+
+    background:rgba(255,255,255,0.1);
+    color:white;
+
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+}
+
+input::placeholder{
+    color:#bbb;
+}
+
+/* LOGIN BUTTON */
+button{
+    width:100%;
+    padding:12px;
+
+    margin-top:10px;
+
+    border:none;
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:linear-gradient(45deg,#00d4ff,#0077ff);
+    color:white;
+    font-weight:bold;
+
+    box-shadow:0 8px 25px rgba(0,212,255,0.4);
+
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 12px 30px rgba(0,212,255,0.6);
+}
+
+/* ===== DASHBOARD ===== */
+.dash{
+    height:100vh;
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+}
+
+.dash h1{
+    font-size:2.8rem;
+    color:#00d4ff;
+    margin-bottom:10px;
+}
+
+.dash p{
+    font-size:1.2rem;
+    color:white;
+    margin-bottom:20px;
+}
+
+/* DASH BUTTON */
+.dash button{
+    padding:14px 25px;
+    border:none;
+    border-radius:10px;
+
+    background:linear-gradient(45deg,#00d4ff,#0077ff);
+    color:white;
+
+    cursor:pointer;
+    font-size:1rem;
+
+    box-shadow:0 8px 25px rgba(0,212,255,0.4);
+    transition:0.3s;
+}
+
+.dash button:hover{
+    transform:scale(1.05);
+}
